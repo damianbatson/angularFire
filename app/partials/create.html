@@ -1,0 +1,40 @@
+<div id="mainContainer">
+    <div id="mainInnerContainer">
+
+<div class="loginStatus">
+<p class="status good" ng-show-auth="login">Hello! {{auth.user.id}} logged in.</p>
+<p class="status" ng-show-auth="logout">Not logged in</p>
+<p class="status error" ng-show-auth="error">{{auth.error}}</p>
+</div>
+
+<div id="columnTwo">
+<h2>Create User Page</h2>
+
+<form>
+    <label>
+        <span>username</span>
+        <input type="text" ng-model="name" />
+    </label>
+    <label>
+        <span>email</span>
+        <input type="text" ng-model="email" />
+    </label>
+    <label>
+        <span>password</span>
+        <input type="password" ng-model="pass" />
+    </label>
+    <label ng-cloak ng-show="createMode">
+        <span>confirm pass</span>
+        <input type="password" ng-model="confirm" />
+    </label>
+    <!--<button ng-click="login()" ng-hide="createMode">Log In</button>
+    <button ng-click="createMode = true" ng-hide="createMode">Create Account</button>-->
+    <button  ng-show="createMode = true" ng-click="createUserAccount()">Ready to Create</button>
+    <button  ng-show="createMode = true" ng-click="createMode = false">Cancel</button>
+
+    <p ng-show="err" class="error">{{err}}</p>
+</form>
+
+</div>
+</div>
+</div>
