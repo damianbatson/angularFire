@@ -59,6 +59,7 @@ table {
 	top:0px;
 	width: 100%;
 	height:100%;
+	margin-top: 80px;
 }
 
 #mainInnerContainer {
@@ -138,6 +139,13 @@ table {
 	float:left;
 }
 
+#columnOne h2{
+	font-size: 44px;
+	font-family: 'Oxygen', sans-serif;
+	color:#c4eeec;
+	margin: 0 0 10px 0
+}
+
 #columnTwo {
 	width: 508px;
 	position: relative;
@@ -161,8 +169,25 @@ table {
 	color:#369;
 	font-size:14px;
 	line-height:1.3em;
-
+	margin-top: 20px;
 }
+
+#columnTwo ul {
+	display: block;
+	font-family: 'Metrophobic', sans-serif;
+	color:#369;
+	font-size:14px;
+	line-height:1.3em;
+	margin-top: 20px;
+}
+
+		#columnTwo legend {
+			display: block;
+			font-family: 'Metrophobic', sans-serif;
+			color:#369;
+			font-size:14px;
+			line-height:1.3em;
+		}
 
 #skillNav{
 	position: relative;
@@ -239,12 +264,13 @@ table {
 }
 
 #logo {
-
-	color: #336699;
+	color:#c4eeec;
 	display: block;
 	float:left;
 	position:relative;
 	padding:6px;
+	font-size: 44px;
+	font-family: 'Oxygen', sans-serif;
 }
 
 #logo img{
@@ -252,6 +278,13 @@ table {
 	position:relative;
 	display:block;
 	margin:auto;
+}
+
+#logo h2{
+	font-size: 44px;
+	font-family: 'Oxygen', sans-serif;
+	color:#c4eeec;
+	margin: 0 0 10px 0
 }
 
 #mainNavContainer {
@@ -487,11 +520,11 @@ table {
 			margin:0 auto;
 		}
 
-		.mainPageContainer {
+		#mainPageContainer {
 			position:relative;
 			display:block;
 			overflow:hidden;
-			margin-top:42%;
+			margin-top:200px;
 		}
 
 		#mainNavContainer {
@@ -512,27 +545,26 @@ table {
 			z-index: 1000;
 			pointer-events:none;
 			float:right;
-			width:50%;
+			width: 100%;
 		}
 
 		#mainnav li {
 			position: relative;
 			pointer-events:auto;
-			float:right;
+			float:left;
 		}
 
 		#mainnav li a {
 			position: relative;
+			width: 80px;
 			background: #0CF;
 			display: block;
 			color: white;
 			text-decoration: none;
 			text-transform: uppercase;
 			font-family: 'Source Sans Pro', sans-serif;
-			font-size:18px;
-			height:36px;
+			font-size:12px;
 			margin-left:1px;
-			padding-top:10px;
 			text-align:center;
 		}
 
@@ -615,13 +647,22 @@ table {
 		}
 
 		#columnTwo h2 {
-			font-size: 44px;
+			font-size: 22px;
 			font-family: 'Oxygen', sans-serif;
 			color:#F60;
 			margin: 0 0 10px 0
 		}
 
 		#columnTwo p {
+			display: block;
+			font-family: 'Metrophobic', sans-serif;
+			color:#369;
+			font-size:14px;
+			line-height:1.3em;
+
+		}
+
+		#columnTwo legend {
 			display: block;
 			font-family: 'Metrophobic', sans-serif;
 			color:#369;
@@ -653,7 +694,7 @@ table {
 }
 
 
-#columnOne .hide {
+.hide {
    display: none;
 }
 
@@ -701,7 +742,7 @@ form label {
 
 form label span {
    display: block;
-   font-weight: bold;
+   font-weight: normal;
    font-family: 'Oxygen', sans-serif;
    font-size: 14px;
 }
@@ -724,4 +765,73 @@ fieldset {
 	width:50%;
 	font-family: 'NotoSans', sans-serif;
 	font-size: 14px;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus {
+  color: #333;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  opacity: .65;
+}
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open .dropdown-toggle.btn-default {
+  color: #333;
+  background-color: #ebebeb;
+  border-color: #adadad;
+}
+.btn-default:active,
+.btn-default.active,
+.open .dropdown-toggle.btn-default {
+  background-image: none;
 }

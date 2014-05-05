@@ -8,21 +8,21 @@ angular.module('myApp.service.login', [])
 
             init: function() {
               var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com");
-               return auth = $firebaseSimpleLogin(firebaseRef);
+              return auth = $firebaseSimpleLogin(firebaseRef);
             },
 
             /**
              * @param {string} email
              * @param {string} pass
-             * @param {Function} [callback]
+             * @param {Function} [promise]
              * @returns {*}
              */
-            login: function(email, pass, callback) {
-              assertAuth();
+            login: function(email, pass, promise) {
+              //assertAuth();
               var error = null;
               auth.$login('password', {email: email, password: pass, rememberMe: true}).then(function(user) {
                 //if (!error) {
-                  callback(null, user);
+                  promise(null, user);
                   console.log('loggedin successfully');
                 //}
               }, function(error){
@@ -31,40 +31,40 @@ angular.module('myApp.service.login', [])
             },
 
             logout: function() {
-               assertAuth();
+               //assertAuth();
                auth.$logout();
             },
 
             changePassword: function(opts) {
-               assertAuth();
+               //assertAuth();
                var error = null;
-               var callback = opts.callback || function() {};
+               var promise = opts.callback || function() {};
                if( !opts.oldpass || !opts.newpass ) {
                   $timeout(function(){
-                   callback('Please enter a password');
+                   promise('Please enter a password');
                  });
                }
                else if( opts.newpass !== opts.confirm ) {
                   $timeout(function() {
-                    callback('Passwords do not match');
+                    promise('Passwords do not match');
                   });
                }
                else {
                   auth.$changePassword(opts.email, opts.oldpass, opts.newpass).then(function(user) {
-                    callback(user);
+                    promise(user);
                     console.log('password changed successfully');
                   }, function(error){
-                    console.error('Unable to login', error);
+                    console.error('Unable to change', error);
                 });
                }
             },
 
-            createUserAccount: function(email, pass, callback) {
-               assertAuth();
+            createUserAccount: function(email, pass, promise) {
+               //assertAuth();
                var error = null;
                auth.$createUser(email, pass).then(function(user) {
                   //if (!error) {
-                    callback(user);
+                    promise(user);
                     console.log('user created successfully');
                   //}
                }, function(error){
@@ -74,27 +74,32 @@ angular.module('myApp.service.login', [])
 
             //createProfile: profileCreator
          };
-
-         function assertAuth() {
-            if( auth === null ) { throw new Error('Must call loginService.init() before using its methods'); }
-         }
+         
       }])
 
-   .factory('profileData', ['$timeout', function( $timeout) {
+   .factory('profileData', ['$timeout', '$firebase', function($timeout, $firebase) {
           return {
-            setData: function(id, email, callback) {
+            setData: function(uid, email, promise) {
               
-              //return auth = $firebaseSimpleLogin(firebaseRef);
-                var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com"+"/users/"+id).set({email: email}, function(user){
-                  if (callback) {
-                    $timeout(function(){
-                      callback(user);
-                    });
-                  }
+              var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+uid);
+              var auth = $firebase(firebaseRef);
+              auth.$set({email: email}, function(user){
+                if (promise) {
+                  $timeout(function(){
+                    promise(user);
+                  });
+                }
 
-                });
+              });
     
-             }
+            },
 
-          };
+            addData: function(newMessage){
+              //var message = null;
+              var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/");
+              var auth = $firebase(firebaseRef);
+              auth.$add({text: newMessage});
+            }
+
+        };
       }]);

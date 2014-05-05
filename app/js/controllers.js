@@ -8,20 +8,18 @@ angular.module('myApp.controllers', [])
       //syncData('syncedValue').$bind($scope, 'syncedValue');
    }])
 
-  .controller('ChatCtrl', ['$scope', '$firebase', function($scope, $firebase) {
+  .controller('ChatCtrl', ['$scope', '$firebase', 'Firebase', 'profileData', function($scope, $firebase, Firebase, profileData) {
+      
+      var messagesRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/");
+      $scope.messages = $firebase(messagesRef);
       $scope.newMessage = null;
-
-      // constrain number of messages by limit into syncData
-      // add the array into $scope.messages
-      $scope.messages = $firebase (new Firebase("https://prototype-firebase.firebaseio.com" + "/messages/"));
-               //return auth = $firebaseSimpleLogin(firebaseRef);
-
-      // add new messages to the list
       $scope.addMessage = function() {
+
          if( $scope.newMessage ) {
-            $scope.messages.$add({text: $scope.newMessage});
+            $scope.messages.$add({text:$scope.newMessage});
             $scope.newMessage = null;
          }
+         //profileData.addData($scope.newMessage);
       };
    }])
 
@@ -63,9 +61,9 @@ angular.module('myApp.controllers', [])
             $scope.err = 'Passwords do not match';
          }
          else {
-            loginService.createUserAccount($scope.email, $scope.pass, function(user) {
+            loginService.createUserAccount($scope.email, $scope.pass, function(user, uid, email) {
 
-               profileData.setData(user.uid, user.email);
+               profileData.setData($scope.auth.user.uid,$scope.auth.user.email);
                $location.path('/account');
                console.log('data set');
 
@@ -75,17 +73,13 @@ angular.module('myApp.controllers', [])
   
    }])
 
-   .controller('AccountCtrl', ['$scope', 'loginService', '$firebase', '$location', function($scope, loginService, $firebase, $location) {
-      //$scope.syncAccount = function() {
-       //  $scope.user = {};
-       //  syncData(['users', $scope.auth.user.uid]).$bind($scope, 'user').then(function(unBind) {
-       //     $scope.unBindAccount = unBind;
-       //     console.log('account sync');
-      //   });
-      //};
+   .controller('AccountCtrl', ['$scope', 'loginService', '$firebase', '$location', 'Firebase', function($scope, loginService, $firebase, $location, Firebase) {
+      var syncRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+$scope.auth.user.uid);
+      $scope.sync = $firebase(syncRef);
 
       $scope.syncAccount = function() {
-        $firebase(new Firebase("https://prototype-firebase.firebaseio.com" +'/users/'+$scope.auth.user.uid)).$bind($scope, 'user').then(function(unBind) {
+         
+         $scope.sync.$bind($scope, 'user').then(function(unBind) {
             $scope.unBindAccount = unBind;
             console.log('account sync');
          });
@@ -95,7 +89,7 @@ angular.module('myApp.controllers', [])
 
       $scope.logout = function() {
          loginService.logout();
-         $location.path('/chat');
+         $location.path('/login');
       };
 
       $scope.oldpass = null;
