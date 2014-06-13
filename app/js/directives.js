@@ -58,50 +58,62 @@ angular.module('myApp.directives', [])
     $rootScope.$on('$firebaseSimpleLogin:logout', function() { loginState = 'logout'; });
     $rootScope.$on('$firebaseSimpleLogin:error',  function() { loginState = 'error'; });
 
-    
+    function getExpectedState(scope, attr) {
+      var expState = scope.$eval(attr);
+      if( typeof(expState) !== 'string' && !angular.isArray(expState) ) {
+        expState = attr;
+      }
+      if( typeof(expState) === 'string' ) {
+        expState = expState.split(',');
+      }
+      return expState;
+    }
+
+      function getLoginState(loginState, list) {
+      var result;
+      angular.forEach(list, function(i) {
+        if( i === loginState ) {
+          result = true;
+        }
+      });
+      return result;
+      }
+
+      function assertValidState(states) {
+      
+        if( !states.length ) {
+          throw new Error('ng-show-auth directive must be login, logout, or error (you may use a comma-separated list)');
+        }
+        
+        angular.forEach(states, function(i) {
+          if( !getLoginState(i, ['login', 'logout', 'error']) ) {
+            throw new Error('Invalid state "'+i+'" for ng-show-auth directive, must be one of login, logout, or error');
+          }
+        });
+        return states;
+        
+      }
 
     return {
       
-         restrict: 'A',
-         compile: function(el, attr) {
+        restrict: 'A',
+        link: function(scope, el, attr) {
+          var expStates = getExpectedState(scope, attr.ngShowAuth);
+          assertValidState(expStates);
+        
           
-            function inList(loginState, list) {
-            var result;
-            angular.forEach(list, function(i) {
-              if( i === loginState ) {
-                result = true;
-              }
-            });
-            return result;
-            }
+            
+          function fn() {
+            
+            var show = getLoginState(loginState, expStates);
+            el.toggleClass('ng-cloak', !show);
+          }
+            
+          fn();
 
-            function assertValidState(state) {
-              if( !state ) {
-                throw new Error('ng-show-auth directive must be login, logout, or error (you may use a comma-separated list)');
-              }
-              var states = (state||'').split(',');
-              angular.forEach(states, function(s) {
-                if( !inList(s, ['login', 'logout', 'error']) ) {
-                  throw new Error('Invalid state "'+s+'" for ng-show-auth directive, must be one of login, logout, or error');
-                }
-              });
-              return true;
-              console.log('assertValidStates');
-            }
-
-            function fn(loginState) {
-               //loginState = newState;
-               var expState = (attr.ngShowAuth||'').split(',');
-               var hide = !inList(loginState, expState);
-               el.toggleClass('hide', hide);
-            }
-
-            assertValidState(attr.ngShowAuth);
-            fn(loginState);
-
-            $rootScope.$on("$firebaseSimpleLogin:login",  function() { fn('login') });
-            $rootScope.$on("$firebaseSimpleLogin:logout", function() { fn('logout') });
-            $rootScope.$on("$firebaseSimpleLogin:error",  function() { fn('error') });
-         }
+          $rootScope.$on("$firebaseSimpleLogin:login", fn);
+          $rootScope.$on("$firebaseSimpleLogin:logout", fn);
+          $rootScope.$on("$firebaseSimpleLogin:error", fn);
+        }
     };
   }]);

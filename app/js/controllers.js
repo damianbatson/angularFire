@@ -78,7 +78,6 @@ angular.module('myApp.controllers', [])
       $scope.sync = $firebase(syncRef);
 
       $scope.syncAccount = function() {
-         
          $scope.sync.$bind($scope, 'user').then(function(unBind) {
             $scope.unBindAccount = unBind;
             console.log('account sync');

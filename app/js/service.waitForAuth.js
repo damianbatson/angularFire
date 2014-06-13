@@ -29,30 +29,32 @@ angular.module('waitForAuth', [])
  *    }
  * </code>
  */
-  .service('waitForAuth', function($rootScope, $q, $timeout) {
-      var def = $q.defer(),
-      subs = [];
+.service('waitForAuth', ['$rootScope', '$q', '$timeout', function($rootScope, $q, $timeout) {
+      var def = $q.defer();
+      var subs = [];
 
-      subs.push($rootScope.$on('$firebaseSimpleLogin:login', fn));
-      subs.push($rootScope.$on('$firebaseSimpleLogin:logout', fn));
-      subs.push($rootScope.$on('$firebaseSimpleLogin:error', fn));
-      
       function fn(err) {
          if( $rootScope.auth ) {
             $rootScope.auth.error = err instanceof Error? err.toString() : null;
          }
          for(var i=0; i < subs.length; i++) {
-          subs[i]();
+            subs[i]();
          }
          $timeout(function() {
             // force $scope.$apply to be re-run after login resolves
             def.resolve();
          });
       }
-      return def.promise;
-   })
 
-.directive('ngCloakAuth', function(waitForAuth) {
+      subs.push($rootScope.$on('$firebaseSimpleLogin:login', fn));
+      subs.push($rootScope.$on('$firebaseSimpleLogin:logout', fn));
+      subs.push($rootScope.$on('$firebaseSimpleLogin:error', fn));
+      
+      
+      return def.promise;
+   }])
+
+.directive('ngCloakAuth',['waitForAuth', function(waitForAuth) {
       return {
          restrict: 'A',
          compile: function(el) {
@@ -65,4 +67,4 @@ angular.module('waitForAuth', [])
             });
          }
       };
-   });
+   }]);
