@@ -100,9 +100,7 @@ angular.module('myApp.directives', [])
         link: function(scope, el, attr) {
           var expStates = getExpectedState(scope, attr.ngShowAuth);
           assertValidState(expStates);
-        
-          
-            
+
           function fn() {
             
             var show = getLoginState(loginState, expStates);
