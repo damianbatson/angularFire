@@ -3,7 +3,7 @@
         <div class="col-md-12">
         <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-sm-2">
 
   <div class="loginStatus">
 <p class="status good" ng-show-auth="login">Hello! {{auth.user.email}} logged in.</p>
@@ -14,7 +14,7 @@
 </div>
 
 
-<div id="col-sm-6">
+<div class="col-sm-5">
 <h2>Account</h2>
 
 <form>
@@ -84,6 +84,28 @@
         <p class="good" ng-show="msg">{{msg}}</p>
     </fieldset>
 </form>
+
+</div>
+
+<div class="col-sm-5">
+<h2>Chat</h2>
+
+<form>
+  <input placeholder="Message..." ng-model="newMessage">
+  <input placeholder="Message..." ng-model="newExer01">
+  <input placeholder="Message..." ng-model="newEmail">
+  <button type="submit" ng-click="addMessage()">send</button>
+</form>
+<!-- <pre></pre> -->
+<ul id="messages" ng-show="messages" ng-repeat="message in messages | orderByPriority | reverse">
+    <li>
+    <h3>{{message.email}}</h3>
+    <h4>{{message.text}}</h4>
+    <h5>{{message.exer}}</h5>
+    <p>{{message.user}}</p>
+    <!-- <pre></pre> -->
+    </li>
+</ul>
 
 </div>
 </div>

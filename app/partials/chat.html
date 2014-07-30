@@ -19,11 +19,13 @@
 
 <form>
   <input placeholder="Message..." ng-model="newMessage">
+  <input placeholder="Message..." ng-model="newExer01">
   <button type="submit" ng-click="addMessage()">send</button>
 </form>
 
-<ul id="messages" ng-show="messages">
-    <li ng-repeat="message in messages | orderByPriority | reverse">{{message.text}}</li>
+<ul id="messages" ng-show="messages" ng-repeat="message in messages | orderByPriority | reverse">
+    <li>{{message.text}}{{message.exer}}</li>
+    <li></li>
 </ul>
 
 </div>

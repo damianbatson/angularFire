@@ -23,22 +23,22 @@ angular.module('myApp.directives', [])
 	};
 })
 
-.directive('inputDir', function() {
-  return {
-    restrict: 'E',
-    scope: {
-      exonemachine: '=userattr'
-      },
+// .directive('inputDir', function() {
+//   return {
+//     restrict: 'E',
+//     scope: {
+//       exonemachine: '=userattr'
+//       },
       
-    templateUrl:'partials/accounttemplate.html',
+//     templateUrl:'partials/accounttemplate.html',
     
     
-    link: function ($scope, $element, $attrs){
+//     link: function ($scope, $element, $attrs){
       
-    },
-    controller: 'AccountCtrl'
-  };
-})
+//     },
+//     controller: 'AccountCtrl'
+//   };
+// })
 
 
 

@@ -79,9 +79,9 @@ angular.module('myApp.service.login', [])
 
    .factory('profileData', ['$timeout', '$firebase', function($timeout, $firebase) {
           return {
-            setData: function(uid, email, promise) {
+            setData: function(user, email, promise) {
               
-              var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+uid);
+              var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+user);
               var auth = $firebase(firebaseRef);
               auth.$set({email: email}, function(user){
                 if (promise) {
