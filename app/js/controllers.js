@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', [])
+angular.module('myApp.controllers', ['firebase.utils'])
 
    .controller('HomeCtrl', ['$scope', '$firebase', function($scope, $firebase) {
       //syncData('syncedValue').$bind($scope, 'syncedValue');
@@ -76,7 +76,8 @@ angular.module('myApp.controllers', [])
   
    }])
 
-   .controller('AccountCtrl', ['$scope', 'loginService', '$firebase', '$location', 'Firebase', function($scope, loginService, $firebase, $location, Firebase) {
+   .controller('AccountCtrl', ['$scope', 'loginService', 'fbutil', '$firebase', '$location', 'Firebase', 
+      function($scope, loginService, fbutil, $firebase, $location, Firebase) {
       var syncRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+$scope.auth.user.uid);
       $scope.sync = $firebase(syncRef);
 
@@ -88,8 +89,9 @@ angular.module('myApp.controllers', [])
       };
 
       $scope.syncAccount();
+      var user = $scope.auth.user.uid;
 
-      var messagesRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/");
+      var messagesRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/"+user);
       $scope.messages = $firebase(messagesRef);
       // var usersRef = new Firebase("https://prototype-firebase.firebaseio.com/users/");
       // $scope.users = $firebase(usersRef);
@@ -97,29 +99,10 @@ angular.module('myApp.controllers', [])
       
       $scope.addMessage = function() {
 
-            $scope.messages.$child('user').$add({text:$scope.newMessage})
-            .then( function(user){
-               $scope.newMessage = null;
+            $scope.messages.$add({text:$scope.newMessage});
+            
 
-            });
-
-      };
-      // var messagesRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/").limit(2);
-      var user = $scope.messages.$child($scope.auth.user.uid);
-      var messages = messagesRef;
-      // var usersRef = new Firebase("https://prototype-firebase.firebaseio.com/users/"+$scope.auth.user.uid);
-      // $scope.users = $firebase(usersRef);
-
-      //var messageListRef = new Firebase('https://SampleChat.firebaseIO-demo.com/message_list');
-      messages.on('value', function(snapshot) {
-         
-         angular.forEach(messagesRef, function(user) {
-            console.log(user);
-          // Will be called with a messageSnapshot for each message under message_list.
-          // $scope.user = User.find(id);
-          // Do something with message.
-         });
-      });
+      };      
 
       $scope.logout = function() {
          loginService.logout();

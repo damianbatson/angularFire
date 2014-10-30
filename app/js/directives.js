@@ -8,9 +8,9 @@ angular.module('myApp.directives', [])
 	return {
 		restrict: 'E',
 		scope: {
-			email: '@emailattr',
-			pass: '=passattr',
-			login: '&loginattr'
+			email: '@',
+			pass: '=',
+			login: '&'
 			},
 			
 		templateUrl:'partials/logintemplate.html',
@@ -52,66 +52,55 @@ angular.module('myApp.directives', [])
  *    <div ng-show-auth="logout,error">This appears for logout or for error condition!</div>
  * </code>
  */
-.directive('ngShowAuth', ['$rootScope', function ($rootScope) {
-    var loginState;
-    $rootScope.$on('$firebaseSimpleLogin:login',  function() { loginState = 'login'; });
-    $rootScope.$on('$firebaseSimpleLogin:logout', function() { loginState = 'logout'; });
-    $rootScope.$on('$firebaseSimpleLogin:error',  function() { loginState = 'error'; });
-
-    function getExpectedState(scope, attr) {
-      var expState = scope.$eval(attr);
-      if( typeof(expState) !== 'string' && !angular.isArray(expState) ) {
-        expState = attr;
-      }
-      if( typeof(expState) === 'string' ) {
-        expState = expState.split(',');
-      }
-      return expState;
-    }
-
-      function getLoginState(loginState, list) {
-      var result;
-      angular.forEach(list, function(i) {
-        if( i === loginState ) {
-          result = true;
-        }
-      });
-      return result;
-      }
-
-      function assertValidState(states) {
-      
-        if( !states.length ) {
-          throw new Error('ng-show-auth directive must be login, logout, or error (you may use a comma-separated list)');
-        }
-        
-        angular.forEach(states, function(i) {
-          if( !getLoginState(i, ['login', 'logout', 'error']) ) {
-            throw new Error('Invalid state "'+i+'" for ng-show-auth directive, must be one of login, logout, or error');
-          }
-        });
-        return states;
-        
-      }
+ .directive('ngShowAuth', ['loginService', '$timeout', function (loginService, $timeout) {
+    var isLoggedIn;
+    loginService.watch(function(user) {
+      isLoggedIn = !!user;
+    });
 
     return {
-      
-        restrict: 'A',
-        link: function(scope, el, attr) {
-          var expStates = getExpectedState(scope, attr.ngShowAuth);
-          assertValidState(expStates);
+      restrict: 'A',
+      link: function(scope, el) {
+        el.addClass('ng-cloak'); // hide until we process it
 
-          function fn() {
-            
-            var show = getLoginState(loginState, expStates);
-            el.toggleClass('ng-cloak', !show);
-          }
-            
-          fn();
-
-          $rootScope.$on("$firebaseSimpleLogin:login", fn);
-          $rootScope.$on("$firebaseSimpleLogin:logout", fn);
-          $rootScope.$on("$firebaseSimpleLogin:error", fn);
+        function update() {
+          // sometimes if ngCloak exists on same element, they argue, so make sure that
+          // this one always runs last for reliability
+          $timeout(function () {
+            el.toggleClass('ng-cloak', !isLoggedIn);
+          }, 0);
         }
+
+        update();
+        loginService.watch(update, scope);
+      }
+    };
+  }])
+
+  /**
+   * A directive that shows elements only when user is logged out.
+   */
+  .directive('ngHideAuth', ['loginService', '$timeout', function (loginService, $timeout) {
+    var isLoggedIn;
+    loginService.watch(function(user) {
+      isLoggedIn = !!user;
+    });
+
+    return {
+      restrict: 'A',
+      link: function(scope, el) {
+        function update() {
+          el.addClass('ng-cloak'); // hide until we process it
+
+          // sometimes if ngCloak exists on same element, they argue, so make sure that
+          // this one always runs last for reliability
+          $timeout(function () {
+            el.toggleClass('ng-cloak', isLoggedIn !== false);
+          }, 0);
+        }
+
+        update();
+        loginService.watch(update, scope);
+      }
     };
   }]);

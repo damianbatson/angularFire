@@ -72,8 +72,29 @@ angular.module('myApp.service.login', [])
                });
             },
 
+            getUser: function() {
+          
+        },
+
             //createProfile: profileCreator
+            watch: function(cb, $scope) {
+          return auth.$getCurrentUser().then(function(user) {
+            cb(user);
+          });
+          listeners.push(cb);
+          var unbind = function() {
+            var i = listeners.indexOf(cb);
+            if( i > -1 ) { listeners.splice(i, 1); }
+          };
+          if( $scope ) {
+            $scope.$on('$destroy', unbind);
+          }
+          return unbind;
+        }
+      
          };
+
+
          
       }])
 
@@ -92,13 +113,6 @@ angular.module('myApp.service.login', [])
 
               });
     
-            },
-
-            addData: function(newMessage){
-              //var message = null;
-              var firebaseRef = new Firebase("https://prototype-firebase.firebaseio.com/messages/");
-              var auth = $firebase(firebaseRef);
-              auth.$add({text: newMessage});
             }
 
         };
