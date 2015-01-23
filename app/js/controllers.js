@@ -100,7 +100,6 @@ angular.module('myApp.controllers', ['firebase.utils'])
       $scope.addMessage = function() {
 
             $scope.messages.$add({text:$scope.newMessage});
-            
 
       };      
 
